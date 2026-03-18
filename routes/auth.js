@@ -68,6 +68,18 @@ router.post('/login', async function (req, res, next) {
     }
 });
 
+router.get('/me', authenticateToken, async function (req, res, next) {
+    try {
+        let user = await userController.GetAnUserById(req.user.id);
+        if (!user) {
+            return res.status(404).send({ message: "Nguoi dung khong ton tai" });
+        }
+        res.send(user);
+    } catch (error) {
+        res.status(500).send({ message: error.message });
+    }
+});
+
 router.put('/change-password', authenticateToken, ChangePasswordValidator, validatedResult,
     async function (req, res, next) {
         try {
